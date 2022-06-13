@@ -15,9 +15,9 @@ func NewConfig() *Config {
 	dBConfig := DatabaseConfig{
 		Host:     env.MustGet("DB_HOST"),
 		Port:     env.MustGet("DB_PORT"),
+		Name:     env.MustGet("DB_NAME"),
 		User:     env.MustGet("DB_USER"),
 		Password: env.MustGet("DB_PASSWORD"),
-		Name:     env.MustGet("DB_NAME"),
 	}
 
 	logrus.Info("Successful configuration loading")
