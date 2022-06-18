@@ -7,15 +7,11 @@ import (
 
 type Store struct {
 	db           *gorm.DB
-	studentsRepo studentDomain.StudentRepository
 }
 
-func New(db *gorm.DB, studentsRepo studentDomain.StudentRepository) *Store {
+func New(db *gorm.DB) *Store {
 	db.AutoMigrate(&Student{})
-
-	return &Store{
-		db, studentsRepo,
-	}
+	return &Store{db}
 }
 
 func (s Store) CreateStudent(student *studentDomain.Student) (*studentDomain.Student, error) {
