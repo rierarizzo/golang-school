@@ -2,6 +2,7 @@ package students
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kenethrrizzo/golang-school/domain/students"
@@ -23,6 +24,31 @@ func NewRoutesFactory(group *gin.RouterGroup) func(service students.StudentServi
 			}
 			response := &ListResponse{
 				Data: responseItems,
+			}
+			c.JSON(http.StatusOK, response)
+		})
+
+		// Get student by id
+		group.GET("/:id", func(c *gin.Context) {
+			id, err := strconv.Atoi(c.Param("id"))
+			if err != nil {
+				c.Error(err)
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+
+			result, err := service.GetStudentById(uint(id))
+			if err != nil {
+				c.Error(err)
+				return
+			}
+
+			response := &StudentResponse{
+				Id:      int(result.Id),
+				Name:    result.Name,
+				Surname: result.Surname,
 			}
 			c.JSON(http.StatusOK, response)
 		})

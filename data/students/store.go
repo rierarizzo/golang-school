@@ -6,7 +6,7 @@ import (
 )
 
 type Store struct {
-	db           *gorm.DB
+	db *gorm.DB
 }
 
 func New(db *gorm.DB) *Store {
@@ -15,7 +15,13 @@ func New(db *gorm.DB) *Store {
 }
 
 func (s Store) CreateStudent(student *studentDomain.Student) (*studentDomain.Student, error) {
-	return student, nil
+	entity := toDBModel(student)
+
+	if err := s.db.Create(entity).Error; err != nil {
+		return nil, err
+	}
+
+	return toDomainModel(entity), nil
 }
 
 func (s Store) ListAllStudents() ([]studentDomain.Student, error) {
@@ -33,4 +39,17 @@ func (s Store) ListAllStudents() ([]studentDomain.Student, error) {
 	}
 
 	return students, nil
+}
+
+func (s Store) GetStudentById(id uint) (*studentDomain.Student, error) {
+	result := Student{Id: id}
+
+	err := s.db.Find(&result).Error
+	if err != nil {
+		return nil, err
+	}
+
+	student := *toDomainModel(&result)
+
+	return &student, nil
 }
