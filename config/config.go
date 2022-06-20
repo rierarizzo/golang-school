@@ -5,6 +5,20 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+type Config struct {
+	Environment string
+	Port        string
+	Database    *DatabaseConfig
+}
+
+type DatabaseConfig struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Name     string
+}
+
 func NewConfig() *Config {
 	env.CheckDotEnv()
 	port := env.MustGet("PORT")
@@ -26,18 +40,4 @@ func NewConfig() *Config {
 		Port:        port,
 		Database:    &dBConfig,
 	}
-}
-
-type Config struct {
-	Environment string
-	Port        string
-	Database    *DatabaseConfig
-}
-
-type DatabaseConfig struct {
-	Host     string
-	Port     string
-	User     string
-	Password string
-	Name     string
 }

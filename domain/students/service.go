@@ -1,5 +1,7 @@
 package students
 
+import "github.com/sirupsen/logrus"
+
 type StudentService interface {
 	CreateStudent(*Student) (*Student, error)
 	ListAllStudents() ([]Student, error)
@@ -19,7 +21,14 @@ func (s *Service) ListAllStudents() ([]Student, error) {
 }
 
 func (s *Service) GetStudentById(id uint) (*Student, error) {
-	return s.repo.GetStudentById(id)
+	student, err := s.repo.GetStudentById(id)
+	if err != nil {
+		logrus.Error("Error has ocurred: ", err.Error())
+		return nil, err
+	}
+
+	logrus.Info("Student name: ", student.Name)
+	return student, nil
 }
 
 func NewService(repo StudentRepository) *Service {

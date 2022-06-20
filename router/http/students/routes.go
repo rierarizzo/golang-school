@@ -6,6 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/kenethrrizzo/golang-school/domain/students"
+	studentDTO "github.com/kenethrrizzo/golang-school/dto/students"
+	"github.com/sirupsen/logrus"
 )
 
 func NewRoutesFactory(group *gin.RouterGroup) func(service students.StudentService) {
@@ -18,13 +20,18 @@ func NewRoutesFactory(group *gin.RouterGroup) func(service students.StudentServi
 				c.Error(err)
 				return
 			}
-			var responseItems = make([]StudentResponse, len(results))
+			var responseItems = make([]studentDTO.StudentResponse, len(results))
 			for i, element := range results {
 				responseItems[i] = *toResponseModel(&element)
 			}
-			response := &ListResponse{
+			response := &studentDTO.ListResponse{
 				Data: responseItems,
 			}
+
+			ex := c.MustGet("ex").(string)
+
+			logrus.Info("Example received from middleware: " + ex)
+
 			c.JSON(http.StatusOK, response)
 		})
 
@@ -45,7 +52,7 @@ func NewRoutesFactory(group *gin.RouterGroup) func(service students.StudentServi
 				return
 			}
 
-			response := &StudentResponse{
+			response := &studentDTO.StudentResponse{
 				Id:      int(result.Id),
 				Name:    result.Name,
 				Surname: result.Surname,

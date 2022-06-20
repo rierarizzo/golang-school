@@ -6,6 +6,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/kenethrrizzo/golang-school/domain/students"
+	"github.com/kenethrrizzo/golang-school/router/http/authentication"
 	studentRoutes "github.com/kenethrrizzo/golang-school/router/http/students"
 )
 
@@ -17,6 +18,7 @@ func NewHTTPHandler(studentService students.StudentService) http.Handler {
 	config.AddAllowHeaders("Authorization")
 
 	router.Use(cors.New(config))
+	router.Use(authentication.Authenticator())
 
 	api := router.Group("/api")
 
