@@ -6,7 +6,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/kenethrrizzo/golang-school/domain/students"
-	studentDTO "github.com/kenethrrizzo/golang-school/dto/students"
 	"github.com/sirupsen/logrus"
 )
 
@@ -20,11 +19,11 @@ func NewRoutesFactory(group *gin.RouterGroup) func(service students.StudentServi
 				c.Error(err)
 				return
 			}
-			var responseItems = make([]studentDTO.StudentResponse, len(results))
+			var responseItems = make([]StudentResponse, len(results))
 			for i, element := range results {
 				responseItems[i] = *toResponseModel(&element)
 			}
-			response := &studentDTO.ListResponse{
+			response := &ListResponse{
 				Data: responseItems,
 			}
 
@@ -52,7 +51,7 @@ func NewRoutesFactory(group *gin.RouterGroup) func(service students.StudentServi
 				return
 			}
 
-			response := &studentDTO.StudentResponse{
+			response := &StudentResponse{
 				Id:      int(result.Id),
 				Name:    result.Name,
 				Surname: result.Surname,
@@ -73,6 +72,31 @@ func NewRoutesFactory(group *gin.RouterGroup) func(service students.StudentServi
 				return
 			}
 			c.JSON(http.StatusCreated, *toResponseModel(newStudent))
+		})
+
+		// Delete student by id
+		group.DELETE("/:id", func(c *gin.Context) {
+			id, err := strconv.Atoi(c.Param("id"))
+			if err != nil {
+				c.Error(err)
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+
+			err = service.DeleteStudent(uint(id))
+			if err != nil {
+				c.Error(err)
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+
+			c.JSON(http.StatusOK, gin.H{
+				"message": "Student deleted",
+			})
 		})
 
 	}

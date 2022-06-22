@@ -6,8 +6,8 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/kenethrrizzo/golang-school/domain/students"
-	"github.com/kenethrrizzo/golang-school/router/http/authentication"
-	studentRoutes "github.com/kenethrrizzo/golang-school/router/http/students"
+	"github.com/kenethrrizzo/golang-school/router/http/middlewares/authentication"
+	studentRoutes "github.com/kenethrrizzo/golang-school/router/http/handlers/students"
 )
 
 func NewHTTPHandler(studentService students.StudentService) http.Handler {

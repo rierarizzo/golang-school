@@ -53,3 +53,14 @@ func (s Store) GetStudentById(id uint) (*studentDomain.Student, error) {
 
 	return &student, nil
 }
+
+func (s Store) DeleteStudent(id uint) error {
+	result := Student{Id: id}
+
+	err := s.db.Delete(&result).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

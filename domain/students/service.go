@@ -6,6 +6,7 @@ type StudentService interface {
 	CreateStudent(*Student) (*Student, error)
 	ListAllStudents() ([]Student, error)
 	GetStudentById(uint) (*Student, error)
+	DeleteStudent(uint) error
 }
 
 type Service struct {
@@ -26,9 +27,14 @@ func (s *Service) GetStudentById(id uint) (*Student, error) {
 		logrus.Error("Error has ocurred: ", err.Error())
 		return nil, err
 	}
+	
 
 	logrus.Info("Student name: ", student.Name)
 	return student, nil
+}
+
+func (s *Service) DeleteStudent(id uint) error {
+	return s.repo.DeleteStudent(id)
 }
 
 func NewService(repo StudentRepository) *Service {
