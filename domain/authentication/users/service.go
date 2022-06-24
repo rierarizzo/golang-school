@@ -1,7 +1,7 @@
 package users
 
-import "github.com/kenethrrizzo/golang-school/domain/authentication/jwt"
+import "github.com/kenethrrizzo/golang-school/domain/dto"
 
 type AuthService interface {
-	Login(*User) (*jwt.Authentication, error)
+	Login(*User) (*dto.Authentication, error)
 }
